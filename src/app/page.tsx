@@ -43,17 +43,19 @@ export default function YorubaFighter() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       {!gameState.gameStarted ? (
-        <CharacterSelection onSelect={startGame} />
+      <CharacterSelection onSelect={startGame} />
       ) : (
-        <>
-          <GameScene
-            playerCharacter={gameState.playerCharacter!}
-            opponentCharacter={gameState.opponentCharacter!}
-            playerHealth={gameState.playerHealth}
-            opponentHealth={gameState.opponentHealth}
-          />
-          <QuestionPanel onAnswer={handleAnswer} />
-        </>
+      <div className="w-full h-[100vh] justify-center align-center">
+        <GameScene
+        playerCharacter={gameState.playerCharacter!}
+        opponentCharacter={gameState.opponentCharacter!}
+        playerHealth={gameState.playerHealth}
+        opponentHealth={gameState.opponentHealth}
+        />
+        <div className='w-full flex justify-center absolute bottom-0 p-4'>
+        <QuestionPanel onAnswer={handleAnswer} />
+        </div>
+      </div>
       )}
     </div>
   )

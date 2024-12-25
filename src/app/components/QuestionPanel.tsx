@@ -1,73 +1,89 @@
-'use client'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 
-import { useState } from 'react'
-
-const questions = [
-  {
-    question: 'What is "Hello" in Yoruba?',
-    options: ['Pẹlẹ o', 'Bawo ni', 'Odabo', 'Jọwọ'],
-    correctAnswer: 'Pẹlẹ o',
-  },
-  {
-    question: 'How do you say "Thank you" in Yoruba?',
-    options: ['Jọwọ', 'Pẹlẹ o', 'Ẹ ṣeun', 'Odabo'],
-    correctAnswer: 'Ẹ ṣeun',
-  },
-{
-    question: 'What is "Goodbye" in Yoruba?',
-    options: ['Bawo ni', 'Odabo', 'Pẹlẹ o', 'Ẹ ṣeun'],
-    correctAnswer: 'Odabo',
-},
-{
-    question: 'How do you say "Please" in Yoruba?',
-    options: ['Jọwọ', 'Pẹlẹ o', 'Odabo', 'Ẹ ṣeun'],
-    correctAnswer: 'Jọwọ',
-},
-]
+import { questions } from "@/lib/questions";
+import { useState } from "react";
 
 interface QuestionPanelProps {
   onAnswer: (isCorrect: boolean) => void;
 }
 
 export default function QuestionPanel({ onAnswer }: QuestionPanelProps) {
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+
+  const getRandomItems = (arr: any[], count: number = 5) => {
+    const shuffled = [...arr].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  };
+  const [questionBank] = useState(getRandomItems(questions, 5));
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+
+  const [answeredQuestions, setAnsweredQuestions] = useState<{
+    [key: number]: string;
+  }>({});
 
   const handleSubmit = () => {
     if (selectedAnswer !== null) {
-      const isCorrect = selectedAnswer === questions[currentQuestion].correctAnswer
-      onAnswer(isCorrect)
-      setSelectedAnswer(null)
-      setCurrentQuestion((prev) => (prev + 1) % questions.length)
+      const isCorrect =
+        selectedAnswer === questions[currentQuestion].correctAnswer;
+      setAnsweredQuestions((prev) => ({
+        ...prev,
+        [currentQuestion]: selectedAnswer,
+      }));
+      console.log(selectedAnswer);
+      console.log(answeredQuestions);
+      
+      onAnswer(isCorrect);
+      setSelectedAnswer(null);
+      setCurrentQuestion((prev) => (prev + 1) % questions.length);
     }
-  }
+  };
 
   return (
-    <div className="w-full max-w-4xl mt-6 bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">{questions[currentQuestion].question}</h2>
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        {questions[currentQuestion].options.map((option, index) => (
-          <button
+    <div className="w-full max-w-4xl mt-6 bg-white p-6 rounded-lg shadow-md ">
+      <div className="flex gap-2 mb-4">
+        {questionBank.map((_, index) => (
+          <div
             key={index}
-            onClick={() => setSelectedAnswer(option)}
-            className={`p-4 text-lg font-semibold rounded-lg transition-colors ${
-              selectedAnswer === option
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+            className={`h-2 flex-1 rounded-full ${
+              currentQuestion in answeredQuestions
+            ? answeredQuestions[index] === questionBank[index].correctAnswer
+              ? "bg-green-500"
+              : "bg-red-500"
+            : "bg-gray-200"
             }`}
-          >
-            {option}
-          </button>
+          />
         ))}
+      </div>
+      <h2 className="text-2xl font-bold mb-8 text-black">
+        {questionBank[currentQuestion]?.question}
+      </h2>
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        {questionBank[currentQuestion]?.options.map(
+          (option: any, index: any) => (
+            <button
+              key={index}
+              onClick={() => setSelectedAnswer(option)}
+              className={`p-4 w-full text-lg border-b-4 border-2 active:transform active:scale-95 transition ease border-gray-300 font-semibold rounded-[8px] transition-colors ${
+                selectedAnswer === option
+                  ? "bg-sky-500 text-white border-sky-600"
+                  : "bg-gray-200 text-gray-800 hover:bg-gray-300 hover:border-gray-400"
+              }`}
+            >
+              {option}
+            </button>
+          )
+        )}
       </div>
       <button
         onClick={handleSubmit}
         disabled={selectedAnswer === null}
-        className="w-full p-4 text-xl font-bold text-white bg-green-500 rounded-lg hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+        className={`w-full p-4 text-xl border-2 font-bold text-white border-b-4 disabled:border-gray-400 border-green-600 hover:border-green-700 bg-green-500 rounded-lg hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors transition ease-in-out ${
+          selectedAnswer !== null ? "active:transform active:scale-95" : ""
+        }`}
       >
         Submit Answer
       </button>
     </div>
-  )
+  );
 }
-
