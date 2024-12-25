@@ -13,7 +13,6 @@ import {
   AlertDialogOverlay,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
-import { useRouter } from "next/navigation";
 
 const characterComponents: {
   [key: string]: ({ isAttacking }: { isAttacking?: boolean }) => JSX.Element;
@@ -36,7 +35,6 @@ export default function GameScene({
   playerHealth,
   opponentHealth,
 }: GameSceneProps) {
-  const router = useRouter();
   const [playerAttacking, setPlayerAttacking] = useState(false);
   const [opponentAttacking, setOpponentAttacking] = useState(false);
   const [showVictoryModal, setShowVictoryModal] = useState(false);
@@ -70,9 +68,7 @@ export default function GameScene({
       {showVictoryModal && (
         <VictoryModal
           onReplay={() => {
-            setShowVictoryModal(false);
-            router.refresh();
-            // Add your reset game logic here
+            window.location.reload();
           }}
         />
       )}
@@ -133,3 +129,27 @@ const VictoryModal = ({ onReplay }: { onReplay: () => void }) => {
     </AlertDialog>
   );
 };
+
+export const DefeatModal = ({ onReplay }: { onReplay: () => void }) => {
+    return (
+      <AlertDialog open={true} onOpenChange={() => {}}>
+        <AlertDialogOverlay />
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Defeat!</AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogDescription>
+            You failed to defeat your opponent.
+          </AlertDialogDescription>
+          <AlertDialogFooter>
+            <button
+              onClick={(onReplay)}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded"
+            >
+              Play Again
+            </button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    );
+  };

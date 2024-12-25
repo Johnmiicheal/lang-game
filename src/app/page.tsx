@@ -37,7 +37,6 @@ export default function YorubaFighter() {
         playerHealth: Math.max(0, gameState.playerHealth - 10),
       })
     }
-    // Here we would also set a new question
   }
 
   return (

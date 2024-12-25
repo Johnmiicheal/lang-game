@@ -2,7 +2,8 @@
 "use client";
 
 import { questions } from "@/lib/questions";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { DefeatModal } from "./GameScene";
 
 interface QuestionPanelProps {
   onAnswer: (isCorrect: boolean) => void;
@@ -25,22 +26,32 @@ export default function QuestionPanel({ onAnswer }: QuestionPanelProps) {
   const handleSubmit = () => {
     if (selectedAnswer !== null) {
       const isCorrect =
-        selectedAnswer === questions[currentQuestion].correctAnswer;
+        selectedAnswer === questionBank[currentQuestion].correctAnswer;
       setAnsweredQuestions((prev) => ({
         ...prev,
         [currentQuestion]: selectedAnswer,
       }));
       console.log(selectedAnswer);
       console.log(answeredQuestions);
-      
       onAnswer(isCorrect);
       setSelectedAnswer(null);
       setCurrentQuestion((prev) => (prev + 1) % questions.length);
     }
   };
+ const [showDefeatModal, setShowDefeatModal] = useState(false);
+  useEffect(() => {
+    if (currentQuestion > questionBank.length - 1) {
+      setShowDefeatModal(true);
+    }
+  }, [currentQuestion]);
 
   return (
     <div className="w-full max-w-4xl mt-6 bg-white p-6 rounded-lg shadow-md ">
+        {showDefeatModal && (
+            <DefeatModal onReplay={() => {
+                window.location.reload();
+              }} />
+        )}
       <div className="flex gap-2 mb-4">
         {questionBank.map((_, index) => (
           <div
