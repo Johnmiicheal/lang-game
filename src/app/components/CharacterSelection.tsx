@@ -13,6 +13,8 @@ const characters = [
     difficulty: "Easy",
     Component: Ade,
     image: "/characters/ade.png",
+    animated: "/characters/ade_idle",
+    frames: 1,
   },
   {
     id: "2",
@@ -20,6 +22,8 @@ const characters = [
     difficulty: "Medium",
     Component: Bola,
     image: "/characters/bola.png",
+    animated: "/characters/bola_idle",
+    frames: 308,
   },
   {
     id: "3",
@@ -27,6 +31,8 @@ const characters = [
     difficulty: "Hard",
     Component: Chike,
     image: "/characters/chike.png",
+    animated: "/characters/chike_idle",
+    frames: 115,
   },
   {
     id: "4",
@@ -64,6 +70,8 @@ export interface Character {
   difficulty: string;
   Component?: React.ComponentType;
   image?: string;
+  animated?: string;
+  frames?: number;
 }
 
 interface CharacterSelectionProps {
@@ -95,7 +103,7 @@ export default function CharacterSelection({
         </Marquee>
       </span>
       <div className="flex flex-col items-center align-center justify-center w-full max-w-[1400px] h-full p-10 z-10">
-        <div className="flex justify-between items-center w-full mb-8">
+        <div className="flex justify-between items-center w-full mb-8 z-20">
           <h1 className="text-3xl font-bold">Choose Your Character</h1>
           {selectedCharacter && (
             <button
@@ -112,14 +120,14 @@ export default function CharacterSelection({
               <button
                 key={character.id}
                 onClick={() => setSelectedCharacter(character)}
-                className={`border-2 flex flex-col items-center p-4 py-5 bg-white rounded-lg border-2 border-b-4 hover:shadow-lg transition-shadow overflow-hidden ${
+                className={`-skew-y-3 border-2 flex flex-col items-center py-[20px] bg-white rounded-lg border-2 border-b-4 hover:shadow-lg transition-shadow overflow-hidden ${
                   selectedCharacter === character
                     ? "border-sky-500"
                     : "border-gray-200"
                 }`}
               >
                 <div
-                  className={`-skew-y-3 w-32 h-32 bg-white overflow-hidden rounded-md border-2 border-gray-200 flex items-center justify-center`}
+                  className={`-skew-y-3 w-32 h-36 bg-white overflow-hidden rounded-md border-2 border-gray-200 flex items-center justify-center`}
                 >
                   <Image
                     src={character.image}
@@ -138,8 +146,8 @@ export default function CharacterSelection({
               <div className="flex flex-col items-end">
                 <div className="w-[400px] h-[300px]">
                   <ImageSequenceAnimator
-                    imagePath="/characters/bola_idle" // Path to your images
-                    totalFrames={308} // Total number of frames in your sequence
+                    imagePath={selectedCharacter.animated!}// Path to your images
+                    totalFrames={selectedCharacter.frames!} // Total number of frames in your sequence
                     frameDuration={10} // Duration for each frame (optional)
                     width={400} // Canvas width (optional)
                     height={900} // Canvas height (optional)

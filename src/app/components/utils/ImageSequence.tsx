@@ -13,7 +13,7 @@ interface ImageSequenceAnimatorProps {
 const ImageSequenceAnimator: React.FC<ImageSequenceAnimatorProps> = ({
     imagePath,
     totalFrames,
-    frameDuration = 10, // Default frame duration
+    frameDuration = 60, // Default frame duration
     width = 800, // Default canvas width
     height = 800, // Default canvas height
 }) => {
