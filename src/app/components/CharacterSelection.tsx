@@ -14,7 +14,8 @@ const characters = [
     Component: Ade,
     image: "/characters/ade.png",
     animated: "/characters/ade_idle",
-    frames: 1,
+    frames: 120,
+    duration: 12,
   },
   {
     id: "2",
@@ -24,6 +25,8 @@ const characters = [
     image: "/characters/bola.png",
     animated: "/characters/bola_idle",
     frames: 308,
+    duration: 10,
+
   },
   {
     id: "3",
@@ -33,6 +36,7 @@ const characters = [
     image: "/characters/chike.png",
     animated: "/characters/chike_idle",
     frames: 115,
+    duration: 10,
   },
   {
     id: "4",
@@ -40,6 +44,9 @@ const characters = [
     difficulty: "Easy",
     Component: undefined,
     image: "/characters/incubator.png",
+    animated: "/characters/unselected",
+    frames: 1,
+    duration: 10,
   },
   {
     id: "5",
@@ -47,6 +54,9 @@ const characters = [
     difficulty: "Medium",
     Component: undefined,
     image: "/characters/incubator.png",
+    animated: "/characters/unselected",
+    frames: 1,
+    duration: 10,
   },
   {
     id: "6",
@@ -54,6 +64,9 @@ const characters = [
     difficulty: "Hard",
     Component: undefined,
     image: "/characters/incubator.png",
+    animated: "/characters/unselected",
+    frames: 1,
+    duration: 10,
   },
   {
     id: "7",
@@ -61,6 +74,9 @@ const characters = [
     difficulty: "Medium",
     Component: undefined,
     image: "/characters/incubator.png",
+    animated: "/characters/unselected",
+    frames: 1,
+    duration: 10,
   },
 ];
 
@@ -72,6 +88,7 @@ export interface Character {
   image?: string;
   animated?: string;
   frames?: number;
+  duration?: number;
 }
 
 interface CharacterSelectionProps {
@@ -144,12 +161,12 @@ export default function CharacterSelection({
           <div className="flex flex-col items-end w-full">
             {selectedCharacter && (
               <div className="flex flex-col items-end">
-                <div className="w-[400px] h-[300px]">
+                <div className="w-[500px] h-[300px]">
                   <ImageSequenceAnimator
                     imagePath={selectedCharacter.animated!}// Path to your images
                     totalFrames={selectedCharacter.frames!} // Total number of frames in your sequence
-                    frameDuration={10} // Duration for each frame (optional)
-                    width={400} // Canvas width (optional)
+                    frameDuration={selectedCharacter.duration} // Duration for each frame (optional)
+                    width={450} // Canvas width (optional)
                     height={900} // Canvas height (optional)
                   />
                 </div>

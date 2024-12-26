@@ -46,7 +46,7 @@ const ImageSequenceAnimator: React.FC<ImageSequenceAnimatorProps> = ({
 
     return (
         <div className="flex justify-center items-center h-full">
-            <canvas ref={canvasRef} width={width} height={height} className=""></canvas>
+            <canvas ref={canvasRef} width={width} height={height}></canvas>
         </div>
     );
 };
