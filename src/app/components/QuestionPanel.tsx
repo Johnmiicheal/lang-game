@@ -19,20 +19,18 @@ export default function QuestionPanel({ onAnswer }: QuestionPanelProps) {
   const [questionBank] = useState(getRandomItems(questions, 5));
   const [currentQuestion, setCurrentQuestion] = useState(0);
 
-  const [answeredQuestions, setAnsweredQuestions] = useState<{
-    [key: number]: string;
-  }>({});
+  const [answers, setAnswers] = useState(questionBank.map(() => null))
 
   const handleSubmit = () => {
     if (selectedAnswer !== null) {
-      const isCorrect =
+      const isCorrect: any =
         selectedAnswer === questionBank[currentQuestion].correctAnswer;
-      setAnsweredQuestions((prev) => ({
-        ...prev,
-        [currentQuestion]: selectedAnswer,
-      }));
+        setAnswers(prev => {
+          const newAnswers = [...prev]
+          newAnswers[currentQuestion] = isCorrect
+          return newAnswers
+        })
       console.log(selectedAnswer);
-      console.log(answeredQuestions);
       onAnswer(isCorrect);
       setSelectedAnswer(null);
       setCurrentQuestion((prev) => (prev + 1) % questions.length);
@@ -40,10 +38,23 @@ export default function QuestionPanel({ onAnswer }: QuestionPanelProps) {
   };
  const [showDefeatModal, setShowDefeatModal] = useState(false);
   useEffect(() => {
-    if (currentQuestion > questionBank.length - 1) {
+    if (currentQuestion > questionBank.length - 1 && answers.some(answer => answer === false)) {
       setShowDefeatModal(true);
     }
-  }, [currentQuestion]);
+  }, [currentQuestion, answers]);
+  
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      return "Are you sure you want to leave?";
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   return (
     <div className="w-full max-w-4xl mt-6 bg-white p-6 rounded-lg shadow-md ">
@@ -52,20 +63,22 @@ export default function QuestionPanel({ onAnswer }: QuestionPanelProps) {
                 window.location.reload();
               }} />
         )}
-      <div className="flex gap-2 mb-4">
-        {questionBank.map((_, index) => (
-          <div
-            key={index}
-            className={`h-2 flex-1 rounded-full ${
-              currentQuestion in answeredQuestions
-            ? answeredQuestions[index] === questionBank[index].correctAnswer
-              ? "bg-green-500"
-              : "bg-red-500"
-            : "bg-gray-200"
-            }`}
-          />
-        ))}
-      </div>
+<div className="flex justify-center space-x-2 mb-4">
+      {answers.map((answer, index) => (
+        <div
+          key={index}
+          className={`w-full h-3 rounded-full ${
+            index === currentQuestion
+              ? 'bg-sky-500'
+              : answer === null
+              ? 'bg-gray-300'
+              : answer
+              ? 'bg-green-500'
+              : 'bg-red-500'
+          }`}
+        ></div>
+      ))}
+    </div>
       <h2 className="text-2xl font-bold mb-8 text-black">
         {questionBank[currentQuestion]?.question}
       </h2>
@@ -89,7 +102,7 @@ export default function QuestionPanel({ onAnswer }: QuestionPanelProps) {
       <button
         onClick={handleSubmit}
         disabled={selectedAnswer === null}
-        className={`w-full p-4 text-xl border-2 font-bold text-white border-b-4 disabled:border-gray-400 border-green-600 hover:border-green-700 bg-green-500 rounded-lg hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors transition ease-in-out ${
+        className={`w-full p-4 text-xl border-2 font-bold text-white border-b-4 disabled:opacity-30 border-green-600 hover:border-green-700 bg-green-500 rounded-lg hover:bg-green-600 disabled:cursor-not-allowed transition-colors transition ease-in-out ${
           selectedAnswer !== null ? "active:transform active:scale-95" : ""
         }`}
       >

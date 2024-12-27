@@ -13,6 +13,8 @@ import {
   AlertDialogOverlay,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
+import ConfettiExplosion, { ConfettiProps } from "./utils/Confetti";
+import ImageSequenceAnimator from "./utils/ImageSequence";
 
 const characterComponents: {
   [key: string]: ({ isAttacking }: { isAttacking?: boolean }) => JSX.Element;
@@ -39,31 +41,45 @@ export default function GameScene({
   const [opponentAttacking, setOpponentAttacking] = useState(false);
   const [showVictoryModal, setShowVictoryModal] = useState(false);
 
-
+  const [pop, setPop] = useState(false);
+  const mediumProps: ConfettiProps = {
+    force: 0.8,
+    duration: 3500,
+    particleCount: 400,
+    width: 1800,
+    colors: ["#041E43", "#1471BF", "#5BB4DC", "#FC027B", "#66D805"],
+  };
 
   useEffect(() => {
     if (opponentHealth <= 0) {
+      setPop(true);
       setShowVictoryModal(true);
     }
   }, [opponentHealth]);
 
   return (
     <div className="w-full h-full bg-blue-200 px-4 pt-20">
+      {pop && <ConfettiExplosion {...mediumProps} />}
       <div className="flex justify-between mb-4">
         <HealthBar health={playerHealth} isPlayer={true} />
         <HealthBar health={opponentHealth} isPlayer={false} />
       </div>
       <div className="flex justify-between items-end">
-        <div className="transform scale-x-[-1]">
-          <CharacterSprite
-            character={playerCharacter}
-            isAttacking={playerAttacking}
+        <div className="transform scale-x-[0.5] scale-y-[0.5] w-[250px] h-[285px]">
+          <ImageSequenceAnimator
+            imagePath={playerCharacter.animated!}
+            totalFrames={playerCharacter.frames!}
+            frameDuration={playerCharacter.duration}
+            width={550}
+            height={750}
           />
         </div>
-        <CharacterSprite
-          character={opponentCharacter}
-          isAttacking={opponentAttacking}
-        />
+        <div className="animate-bounce-fast">
+          <CharacterSprite
+            character={opponentCharacter}
+            isAttacking={opponentAttacking}
+          />
+        </div>
       </div>
       {showVictoryModal && (
         <VictoryModal
@@ -112,15 +128,17 @@ const VictoryModal = ({ onReplay }: { onReplay: () => void }) => {
       <AlertDialogOverlay />
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Victory!</AlertDialogTitle>
+          <AlertDialogTitle className="w-full flex justify-center text-3xl">
+            Victory!
+          </AlertDialogTitle>
         </AlertDialogHeader>
-        <AlertDialogDescription>
+        <AlertDialogDescription className="w-full flex justify-center text-xl">
           Congratulations, you won the battle!
         </AlertDialogDescription>
-        <AlertDialogFooter>
+        <AlertDialogFooter className="flex items-center align-center sm:justify-center w-full">
           <button
             onClick={onReplay}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded"
+            className="mt-8 p-2 px-4 border-b-4 border-2 border-sky-600 bg-sky-500 hover:scale-105 active:transform active:scale-95 transition ease text-white font-bold rounded-lg"
           >
             Play Again
           </button>
@@ -131,25 +149,27 @@ const VictoryModal = ({ onReplay }: { onReplay: () => void }) => {
 };
 
 export const DefeatModal = ({ onReplay }: { onReplay: () => void }) => {
-    return (
-      <AlertDialog open={true} onOpenChange={() => {}}>
-        <AlertDialogOverlay />
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Defeat!</AlertDialogTitle>
-          </AlertDialogHeader>
-          <AlertDialogDescription>
-            You failed to defeat your opponent.
-          </AlertDialogDescription>
-          <AlertDialogFooter>
-            <button
-              onClick={(onReplay)}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded"
-            >
-              Play Again
-            </button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    );
-  };
+  return (
+    <AlertDialog open={true} onOpenChange={() => {}}>
+      <AlertDialogOverlay />
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="w-full flex justify-center text-3xl">
+            Defeat!
+          </AlertDialogTitle>
+        </AlertDialogHeader>
+        <AlertDialogDescription className="w-full flex justify-center text-xl">
+          So close!. You failed to defeat your opponent.
+        </AlertDialogDescription>
+        <AlertDialogFooter className="flex items-center align-center sm:justify-center w-full">
+          <button
+            onClick={onReplay}
+            className="mt-8 p-2 px-4 border-b-4 border-2 border-sky-600 bg-sky-500 hover:scale-105 active:transform active:scale-95 transition ease text-white font-bold rounded-lg"
+          >
+            Play Again
+          </button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};

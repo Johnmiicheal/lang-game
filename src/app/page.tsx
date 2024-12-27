@@ -6,7 +6,7 @@ import GameScene from './components/GameScene'
 import QuestionPanel from './components/QuestionPanel'
 
 
-export default function YorubaFighter() {
+export default function LangGame() {
   const [gameState, setGameState] = useState({
     playerCharacter: { id: '', name: '', difficulty: '' },
     opponentCharacter: { id: '', name: '', difficulty: '' },

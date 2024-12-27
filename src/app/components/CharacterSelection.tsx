@@ -101,6 +101,9 @@ export default function CharacterSelection({
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(
     characters[0]
   );
+
+  const isStartGameButtonDisabled = selectedCharacter && parseInt(selectedCharacter.id) > 3;
+
   return (
     <div className="bg-sky-100 w-full h-[100vh] flex items-center justify-center">
       <span className="absolute top-0 p-4">
@@ -122,7 +125,7 @@ export default function CharacterSelection({
       <div className="flex flex-col items-center align-center justify-center w-full max-w-[1400px] h-full p-10 z-10">
         <div className="flex justify-between items-center w-full mb-8 z-20">
           <h1 className="text-3xl font-bold">Choose Your Character</h1>
-          {selectedCharacter && (
+          {selectedCharacter && !isStartGameButtonDisabled && (
             <button
               onClick={() => onSelect(selectedCharacter)}
               className="p-4 border-b-4 border-2 border-sky-600 bg-sky-500 text-white font-bold rounded-lg"
@@ -163,11 +166,11 @@ export default function CharacterSelection({
               <div className="flex flex-col items-end">
                 <div className="w-[500px] h-[300px]">
                   <ImageSequenceAnimator
-                    imagePath={selectedCharacter.animated!}// Path to your images
-                    totalFrames={selectedCharacter.frames!} // Total number of frames in your sequence
-                    frameDuration={selectedCharacter.duration} // Duration for each frame (optional)
-                    width={450} // Canvas width (optional)
-                    height={900} // Canvas height (optional)
+                    imagePath={selectedCharacter.animated!}
+                    totalFrames={selectedCharacter.frames!}
+                    frameDuration={selectedCharacter.duration}
+                    width={450} 
+                    height={900}
                   />
                 </div>
               </div>
