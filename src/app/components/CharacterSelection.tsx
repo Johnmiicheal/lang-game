@@ -122,8 +122,8 @@ export default function CharacterSelection({
           />
         </Marquee>
       </span>
-      <div className="flex flex-col items-center align-center justify-center w-full max-w-[1400px] h-full p-10 z-10">
-        <div className="flex justify-between items-center w-full mb-8 z-20">
+      <div className="flex flex-col items-center align-center justify-center w-full max-w-[1400px] h-full p-10 z-10 bg-sky-100">
+        <div className="flex justify-between items-center w-full mb-8 z-20 md:py-0 py-[120px]">
           <h1 className="text-3xl font-black">Choose Your Character</h1>
           {selectedCharacter && !isStartGameButtonDisabled && (
             <button
@@ -134,8 +134,23 @@ export default function CharacterSelection({
             </button>
           )}
         </div>
-        <div className="flex items-center align-center justify-center w-full h-[70vh]">
-          <div className="grid grid-cols-3 gap-4 w-full">
+        <div className="flex flex-col md:flex-row-reverse items-center justify-center w-full h-[70vh] bg-sky-100">
+          <div className="flex flex-col items-end w-full mt-[500px] mb-[50px] md:mt-0 justify-center">
+            {selectedCharacter && (
+              <div className="flex flex-col items-end">
+                <div className="w-[270px] justify-center flex h-[100px] md:w-[500px] md:h-[300px] scale-x-[0.5] scale-y-[0.5] md:scale-x-[1.0] md:scale-y-[1.0]">
+                  <ImageSequenceAnimator
+                    imagePath={selectedCharacter.animated!}
+                    totalFrames={selectedCharacter.frames!}
+                    frameDuration={selectedCharacter.duration}
+                    width={450} 
+                    height={900}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 w-full mt-[25%] md:mt-0">
             {characters.map((character) => (
               <button
                 key={character.id}
@@ -160,21 +175,6 @@ export default function CharacterSelection({
                 {/* <span className="font-bold mt-2">{character.name}</span> */}
               </button>
             ))}
-          </div>
-          <div className="flex flex-col items-end w-full">
-            {selectedCharacter && (
-              <div className="flex flex-col items-end">
-                <div className="w-[500px] h-[300px]">
-                  <ImageSequenceAnimator
-                    imagePath={selectedCharacter.animated!}
-                    totalFrames={selectedCharacter.frames!}
-                    frameDuration={selectedCharacter.duration}
-                    width={450} 
-                    height={900}
-                  />
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
