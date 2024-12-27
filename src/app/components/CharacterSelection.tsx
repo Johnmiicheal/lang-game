@@ -124,7 +124,7 @@ export default function CharacterSelection({
       </span>
       <div className="flex flex-col items-center align-center justify-center w-full max-w-[1400px] h-full p-10 z-10">
         <div className="flex justify-between items-center w-full mb-8 z-20">
-          <h1 className="text-3xl font-bold">Choose Your Character</h1>
+          <h1 className="text-3xl font-black">Choose Your Character</h1>
           {selectedCharacter && !isStartGameButtonDisabled && (
             <button
               onClick={() => onSelect(selectedCharacter)}
